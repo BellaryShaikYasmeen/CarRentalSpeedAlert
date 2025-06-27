@@ -1,17 +1,17 @@
 package com.example.carrentalspeedalert.notifier
-// --- FIREBASE NOTIFIER ---
+// --- FIREBASE NOTIFIER --
 open class FirebaseNotifier {
     open fun notifyRentalCompany(rentalId: String, speed: Int) {
-        //  Firebase Cloud Messaging (FCM) API call
-        // Example:
-        // POST to https://fcm.googleapis.com/fcm/send
-        // Body: {
-        //   "to": "/topics/fleet_notifications",
-        //   "notification": {
-        //     "title": "Speed Violation",
-        //     "body": "Rental $rentalId exceeded speed: $speed km/h"
-        //   }
-        // }
+       //   Firebase Cloud Messaging (FCM) API call
+
+//         POST to https://fcm.googleapis.com/fcm/send
+//         Body: {
+//           "to": "/topics/fleet_notifications",
+//           "notification": {
+//             "title": "Speed Violation",
+//             "body": "Rental $rentalId exceeded speed: $speed km/h"
+//           }
+//         }
         println("[Firebase] Notify rental company: Rental $rentalId exceeded speed: $speed km/h")
     }
 
