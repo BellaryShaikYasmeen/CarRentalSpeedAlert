@@ -1,19 +1,24 @@
 package com.example.carrentalspeedalert.repositary
 
-import com.example.carrentalspeedalert.domain.Customer
+import com.example.carrentalspeedalert.domain.ChannelType
 import com.example.carrentalspeedalert.domain.Rental
 
-interface RentalRepository {
-    fun getRentalById(rentalId: String): Rental?
+class RentalRepository {
+    private val rentals = mutableMapOf<String, Rental>()
 
-}
-class InMemoryRentalRepository : RentalRepository {
-    private val rentals = listOf(
-        Rental("R1", Customer("C1", "Alice"), 100),
-        Rental("R2", Customer("C2", "Bob"), 90)
-    )
-
-    override fun getRentalById(rentalId: String): Rental? {
-        return rentals.find { it.rentalId == rentalId }
+    fun addOrUpdateRental(rental: Rental) {
+        rentals[rental.customerId] = rental
     }
+
+    fun getRental(customerId: String): Rental? = rentals[customerId]
+    fun switchChannel(customerId: String, newChannel: ChannelType): Boolean {
+        val rental = rentals[customerId]
+        return if (rental != null) {
+            rental.channelType = newChannel
+            true
+        } else {
+            false
+        }
+    }
+
 }

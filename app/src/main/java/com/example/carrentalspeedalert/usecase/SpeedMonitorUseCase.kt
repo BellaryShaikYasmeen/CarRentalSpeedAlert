@@ -1,29 +1,20 @@
 package com.example.carrentalspeedalert.usecase
 
-import com.example.carrentalspeedalert.domain.SpeedEvent
-import com.example.carrentalspeedalert.notifier.FirebaseNotifier
+import com.example.carrentalspeedalert.NotificationDispatcher.NotificationDispatcher
 import com.example.carrentalspeedalert.repositary.RentalRepository
 
-// --- SPEED MONITOR USE CASE ---
-class SpeedMonitorUseCase(
-    private val firebaseNotifier: FirebaseNotifier,
-    private val rentalRepository: RentalRepository
+class SpeedMonitor(
+    private val repo: RentalRepository,
+    private val dispatcher: NotificationDispatcher
 ) {
-    fun onSpeedEvent(event: SpeedEvent) {
-        val rental = rentalRepository.getRentalById(event.rentalId)
-        if (rental == null) {
-            println("Rental ID ${event.rentalId} not found.")
-            return
-        }
-
-        if (event.speed > rental.maxAllowedSpeed) {
-            firebaseNotifier.notifyRentalCompany(rental.rentalId, event.speed)
-            firebaseNotifier.alertCustomer(
-                rental.rentalId,
-                "You are speeding at ${event.speed} km/h. Limit: ${rental.maxAllowedSpeed} km/h"
-            )
+    fun checkSpeed(customerId: String, currentSpeed: Int) {
+        val rental = repo.getRental(customerId) ?: return
+        if (currentSpeed > rental.maxSpeed) {
+            println("⚠️ Warning: User exceeded speed limit of ${rental.maxSpeed} km/h.")
+            val strategy = dispatcher.getStrategy(rental.channelType)
+            strategy.notify(customerId, currentSpeed)
         } else {
-            println("Speed is within the allowed limit for rental ${rental.rentalId}.")
+            println("✅ Speed is within the limit for $customerId.")
         }
     }
 }
