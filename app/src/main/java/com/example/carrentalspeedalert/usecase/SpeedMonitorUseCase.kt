@@ -10,11 +10,11 @@ class SpeedMonitor(
     fun checkSpeed(customerId: String, currentSpeed: Int) {
         val rental = repo.getRental(customerId) ?: return
         if (currentSpeed > rental.maxSpeed) {
-            println("⚠️ Warning: User exceeded speed limit of ${rental.maxSpeed} km/h.")
+            println("Warning: User exceeded speed limit of ${rental.maxSpeed} km/h.")
             val strategy = dispatcher.getStrategy(rental.channelType)
             strategy.notify(customerId, currentSpeed)
         } else {
-            println("✅ Speed is within the limit for $customerId.")
+            println("Speed is within the limit for $customerId.")
         }
     }
 }
